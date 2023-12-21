@@ -2,14 +2,15 @@
 Library           SeleniumLibrary
 
 *** variables ***
-${BROWSER}     headlesschrome
-${HOST}    http://127.0.0.1:8000
+${BROWSER}     chrome
+${HOST}    http://localhost/DataKaryawan/
 
-${EMAIL}    test@mail.com
-${PASS-1}    123456    # correct password
-${PASS-2}    xxs12s2    # wrong password
+${EMAIL}    admin
+${PASS-1}    admin    # correct password
+${PASS-2}    zzzzzz    # wrong password
+${PASS-3}   rizky      # add password
 
-${COMPANY}    global.inc
+${KARYAWAN}    Rizky Maolana Firdaus
 ${TITLE}    [TEST] Senior Engineering manager
 ${LOCATION}     Singapore
 ${TAGS}    engineering manager software
@@ -23,54 +24,53 @@ ${DESCRIPTION}     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
 # positive test
 testcase-1
     Login Success
-    Close Browser    
+    Close Browser 
 
 # negative test
 testcase-2
     Open Browser    ${HOST}    ${BROWSER}
-    Click Element     xpath://a[@href='/login']
-    Page Should Contain Element   xpath://input[@name='email']
-    input text        name:email       ${EMAIL}
+    Page Should Contain Element   xpath://input[@name='username']
+    input text        name:username       ${EMAIL}
     input text        name:password    ${PASS-2}
-    Click Element     xpath://button[@type='submit']
-    Page Should Not Contain Element  xpath://a[@href='/listings/manage']
+    input text        name:nama       ${EMAIL}
+    Click Element    xpath://option[@value='1']
+    Click Element   xpath://select[@name='level']
+    Click Element     xpath://input[@type='submit']
+    Page Should Contain Element    xpath://h1[contains(text(), 'Silahkan Login Terlebih Dahulu')]
     Close Browser 
 
 # logout
 testcase-3
     Login Success
-    Click Element     xpath://button[@id='logout']
-    Page Should Contain Element    xpath://a[@href='/login']
-    Close Browser 
+    Click Element    xpath://div[@class='menu']//a[@class='menuNavbar' and @href='logout.php']
+    Page Should Contain Element    xpath://h1[contains(text(), 'Silahkan Login Terlebih Dahulu')]
+    Close Browser
 
 #post job
 testcase-4
     Login Success
-    Click Element     xpath://a[@href='/listings/create']
-    Page Should Contain Element   xpath://input[@name='company']
-    input text        name:company       ${COMPANY}
-    input text        name:title       ${TITLE}
-    input text        name:location       ${LOCATION}
-    input text        name:email       ${JOBEMAIL}
-    input text        name:website       ${WEBSITE}
-    Input Text        name:tags       ${TAGS}
-    Input Text        name:description       ${DESCRIPTION}
-    Click Element     xpath://button[@id='create']
+    Click Element    xpath://a[@id='inputUser' and contains(@class, 'menuNavbar') and @href='inputuser.php']
+    Page Should Contain Element    xpath://h1[contains(text(), 'Input Data User')]
+    input text        name:username       ${KARYAWAN}
+    input text        name:password    ${PASS-3}
+    input text        name:nama       ${KARYAWAN}
+    Click Element   xpath://select[@name='level']
+    Click Element    xpath://option[@value='user']
+    Click Element     xpath://input[@type='submit']
     Close Browser 
 
 # delete post
 testcase-5
     Login Success
-    Click Element     xpath://a[@href='/listings/manage']
-    Click Element     xpath://button[@id='delete']
+    Click Element    xpath://a[contains(@class, 'menuNavbar') and @href='viewAllUser.php']
+    Click Element    xpath://a[@href='deleteuser.php?id=4']
     Close Browser
     
 testcase-6
     Login Success
-    Click Element     xpath://a[@href='/listings/create']
-    Page Should Contain Element   xpath://input[@name='company']
-    sleep     5s
+    Click Element    xpath://a[contains(@class, 'menuNavbar') and @href='viewAllPegawai.php']
     Scroll Down Until End
+    Close Browser
 
 *** Keywords ***
 
@@ -87,9 +87,11 @@ Scroll Down Until End
 
 Login Success
     Open Browser    ${HOST}    ${BROWSER}
-    Click Element     xpath://a[@href='/login']
-    Page Should Contain Element   xpath://input[@name='email']
-    input text        name:email       ${EMAIL}
+    Page Should Contain Element   xpath://input[@name='username']
+    input text        name:username       ${EMAIL}
     input text        name:password    ${PASS-1}
-    Click Element     xpath://button[@type='submit']
-    Page Should Contain Element   xpath://a[@href='/listings/manage']
+    input text        name:nama       ${EMAIL}
+    Click Element   xpath://select[@name='level']
+    Click Element    xpath://option[@value='1']
+    Click Element     xpath://input[@type='submit']
+    Page Should Contain Element    xpath://body//h1[contains(@class, 'tulisan_admin')]
